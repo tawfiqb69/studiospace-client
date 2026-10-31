@@ -12,6 +12,28 @@ const nextConfig = {
       },
     },
   },
+
+  async rewrites() {
+    return [
+      {
+        source: "/api/studios/:path*",
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/api/studios/:path*`,
+      },
+      {
+        source: "/api/my-studios",
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/api/my-studios`,
+      },
+      {
+        source: "/api/bookings/:path*",
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/:path*`,
+      },
+      // TEMPORARY: JWT test-er jonno, pore delete korbo
+      {
+        source: "/api/me",
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/api/me`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
