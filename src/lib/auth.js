@@ -9,9 +9,11 @@ export const auth = betterAuth({
   database: mongodbAdapter(db, {
     client,
   }),
-  emailAndPassword: { 
-    enabled: true, 
-  }, 
+  emailAndPassword: {
+  enabled: true,
+  autoSignIn: false,
+  minPasswordLength: 6,
+}, 
 //   socialProviders: { 
 //     github: { 
 //       clientId: process.env.GITHUB_CLIENT_ID as string, 
