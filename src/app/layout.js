@@ -3,6 +3,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { Suspense } from "react";
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 // Body text
 const instrumentSans = Instrument_Sans({
@@ -39,7 +40,9 @@ export default function RootLayout({ children }) {
           <Navbar />
         </Suspense>
         <main className="flex-1">{children}</main>
-        <Toaster />
+                
+        <Footer />
+        <Toaster position="top-center" />
 
       </body>
     </html>

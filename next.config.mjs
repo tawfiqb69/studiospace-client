@@ -4,6 +4,19 @@ const nextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   reactCompiler: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "placehold.co",
+      },
+    ],
+  },
+
   turbopack: {
     rules: {
       "*.css": {
@@ -27,7 +40,7 @@ const nextConfig = {
         source: "/api/bookings/:path*",
         destination: `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/:path*`,
       },
- 
+
     ];
   },
 };
