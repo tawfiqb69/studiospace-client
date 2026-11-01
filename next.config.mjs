@@ -27,11 +27,7 @@ const nextConfig = {
         source: "/api/bookings/:path*",
         destination: `${process.env.NEXT_PUBLIC_API_URL}/api/bookings/:path*`,
       },
-      // TEMPORARY: JWT test-er jonno, pore delete korbo
-      {
-        source: "/api/me",
-        destination: `${process.env.NEXT_PUBLIC_API_URL}/api/me`,
-      },
+ 
     ];
   },
 };
