@@ -11,22 +11,19 @@ import Image from "next/image";
 
 const slides = [
   {
-    image:
-      "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?auto=format&fit=crop&w=2000&q=85",
+    image: "https://i.ibb.co/pj2qfv26/set-up-studio-shoot.jpg",
     title: "Create something worth remembering.",
     description:
       "Find inspiring studios and production spaces built for your next creative project.",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=2000&q=85",
+    image: "https://i.ibb.co/qPpNDCQ/music-s.jpg",
     title: "A space for every kind of creator.",
     description:
       "From photography and music to podcasts and art, discover a space that fits your vision.",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=2000&q=85",
+    image: "https://i.ibb.co/0pfVkw7Y/podcast.jpg",
     title: "Turn your ideas into real work.",
     description:
       "Book a professional creative space and focus on making your best work.",
@@ -34,25 +31,6 @@ const slides = [
 ];
 
 export default function HeroSlider() {
-  //   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
-  //   useEffect(() => {
-  //     const mediaQuery = window.matchMedia(
-  //       "(prefers-reduced-motion: reduce)"
-  //     );
-
-  //     setPrefersReducedMotion(mediaQuery.matches);
-
-  //     const handleChange = (event) => {
-  //       setPrefersReducedMotion(event.matches);
-  //     };
-
-  //     mediaQuery.addEventListener("change", handleChange);
-
-  //     return () => {
-  //       mediaQuery.removeEventListener("change", handleChange);
-  //     };
-  //   }, []);
 
   return (
     <section className="relative overflow-hidden">
@@ -65,16 +43,17 @@ export default function HeroSlider() {
           disableOnInteraction: false,
         }}
         loop
-        className="hero-swiper h-[70vh] min-h-[520px]"
+        className="hero-swiper h-[70vh] min-h-130"
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide.title}>
-            <div className="relative h-full min-h-[520px]">
+            <div className="relative h-full min-h-130">
               <Image
                 src={slide.image}
                 alt=""
                 fill
                 priority={slide.title === slides[0].title}
+                quality={100}
                 sizes="100vw"
                 className="object-cover"
               />
