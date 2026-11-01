@@ -25,7 +25,7 @@ async function StudioDetails({ params }) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/studios/${id}`,
-      { cache: "no-store" }
+      { cache: "no-store" },
     );
 
     if (response.ok) {
@@ -55,7 +55,9 @@ async function StudioDetails({ params }) {
     );
   }
 
-  const images = (studio.gallery?.length ? studio.gallery : [studio.image]).filter(Boolean);
+  const images = (
+    studio.gallery?.length ? studio.gallery : [studio.image]
+  ).filter(Boolean);
   const amenities = studio.amenities || [];
   const reviews = studio.reviews || [];
   const categoryStyle = categoryStyles[studio.category] || "bg-secondary";
@@ -106,7 +108,8 @@ async function StudioDetails({ params }) {
                     <span className="font-medium text-foreground">
                       {rating.toFixed(1)}
                     </span>
-                    ({reviews.length} {reviews.length === 1 ? "review" : "reviews"})
+                    ({reviews.length}{" "}
+                    {reviews.length === 1 ? "review" : "reviews"})
                   </>
                 ) : (
                   "New listing"
@@ -129,7 +132,9 @@ async function StudioDetails({ params }) {
 
           {/* Overview */}
           <section className="mt-10 border-t border-border pt-8">
-            <h2 className="font-heading text-xl font-semibold">About this studio</h2>
+            <h2 className="font-heading text-xl font-semibold">
+              About this studio
+            </h2>
             <p className="mt-3 whitespace-pre-line leading-relaxed text-muted-foreground">
               {studio.overview}
             </p>
@@ -185,7 +190,10 @@ async function StudioDetails({ params }) {
                     <div className="flex items-center justify-between gap-4">
                       <p className="font-medium">{review.userName}</p>
                       <span className="inline-flex items-center gap-1 text-sm">
-                        <Star className="size-4 fill-gel text-gel" aria-hidden="true" />
+                        <Star
+                          className="size-4 fill-gel text-gel"
+                          aria-hidden="true"
+                        />
                         {Number(review.rating || 0).toFixed(1)}
                       </span>
                     </div>
@@ -218,7 +226,11 @@ async function StudioDetails({ params }) {
             </p>
 
             <div className="mt-6">
-              <BookWorkspaceButton studioId={studio._id} />
+              <BookWorkspaceButton
+                studioId={studio._id}
+                studioTitle={studio.title}
+                hourlyRate={studio.hourlyRate}
+              />
             </div>
 
             <p className="mt-4 text-xs text-muted-foreground">

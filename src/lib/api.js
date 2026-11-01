@@ -1,7 +1,9 @@
 // Private API call helper (browser theke).
 // Shob-shomoy relative URL dite hobe (jemon "/api/studios"),
 // jate Next.js rewrite HTTPOnly cookie Express-e pathay.
-export async function privateFetch(url, options = {}) {
+// Private API call helper (browser theke).
+// Shob-shomoy relative URL dite hobe.
+export async function privateFetch(url, options = {}, router) {
   const response = await fetch(url, {
     ...options,
     headers: {
@@ -11,17 +13,16 @@ export async function privateFetch(url, options = {}) {
   });
 
   let data = null;
+
   try {
     data = await response.json();
   } catch {
     data = null;
   }
 
-  // Login nai ba session shesh: login page-e pathai, login-er por ei page-e fire ashe
-
-//   change
+  // Login nai ba session shesh
   if (response.status === 401) {
-    window.location.href = `/login?redirect=${window.location.pathname}`;
+    router?.replace("/login");
   }
 
   return { ok: response.ok, status: response.status, data };
