@@ -15,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import ThemeToggle from "@/components/common/ThemeToggle";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -105,6 +106,7 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-2">
+                    <ThemeToggle />
           {isPending ? (
             <div className="size-9 animate-pulse rounded-full bg-muted" />
           ) : user ? (

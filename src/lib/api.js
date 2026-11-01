@@ -22,7 +22,7 @@ export async function privateFetch(url, options = {}, router) {
 
   // Login nai ba session shesh
   if (response.status === 401) {
-    router?.replace("/login");
+        router?.replace(`/login?redirect=${window.location.pathname}`);
   }
 
   return { ok: response.ok, status: response.status, data };
