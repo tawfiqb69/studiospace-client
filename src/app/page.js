@@ -18,14 +18,14 @@ export default function Home() {
       <Suspense fallback={<FeaturedStudiosSkeleton />}>
         <FeaturedStudios />
       </Suspense>
-      
+
       <StudioCategories />
 
-       <HowBookingWorks />
+      <HowBookingWorks />
 
-       <HostGuarantee />
+      <HostGuarantee />
 
-       <AboutSection />
+      <AboutSection />
     </main>
   );
 }
