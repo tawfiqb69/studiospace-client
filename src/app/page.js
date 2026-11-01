@@ -4,6 +4,7 @@ import FeaturedStudios, {
   FeaturedStudiosSkeleton,
 } from "@/components/home/FeaturedStudios";
 import StudioCategories from "@/components/home/StudioCategories";
+import HowBookingWorks from "@/components/home/HowBookingWorks";
 
 export default function Home() {
   return (
@@ -17,6 +18,8 @@ export default function Home() {
       </Suspense>
       
       <StudioCategories />
+
+       <HowBookingWorks />
     </main>
   );
 }
