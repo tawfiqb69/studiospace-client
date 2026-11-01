@@ -5,6 +5,8 @@ import FeaturedStudios, {
 } from "@/components/home/FeaturedStudios";
 import StudioCategories from "@/components/home/StudioCategories";
 import HowBookingWorks from "@/components/home/HowBookingWorks";
+import HostGuarantee from "@/components/home/HostGuarantee";
+import AboutSection from "@/components/home/AboutSection";
 
 export default function Home() {
   return (
@@ -20,6 +22,10 @@ export default function Home() {
       <StudioCategories />
 
        <HowBookingWorks />
+
+       <HostGuarantee />
+
+       <AboutSection />
     </main>
   );
 }
