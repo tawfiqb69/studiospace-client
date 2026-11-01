@@ -1,6 +1,8 @@
 import { Bricolage_Grotesque, Instrument_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { Suspense } from "react";
+import Navbar from "@/components/layout/Navbar";
 
 // Body text
 const instrumentSans = Instrument_Sans({
@@ -32,8 +34,13 @@ export default function RootLayout({ children }) {
       className={`${instrumentSans.variable} ${bricolage.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        {children}
+
+        <Suspense fallback={<div className="h-16 border-b border-border" />}>
+          <Navbar />
+        </Suspense>
+        <main className="flex-1">{children}</main>
         <Toaster />
+
       </body>
     </html>
   );
