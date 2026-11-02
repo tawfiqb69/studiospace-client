@@ -1,45 +1,27 @@
+
 import StudioCard from "./studios/StudioCard";
 
-
-
 export default async function FeaturedStudios() {
-  let studios = [];
-
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/studios?limit=6&sort=rating`,
-      {
-        cache: "no-store",
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch studios");
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/studios?limit=6&sort=rating`,
+    {
+      cache: "no-store",
     }
+  );
 
-    studios = await response.json();
-  } catch (error) {
-    console.error("Featured studios error:", error);
-
-    return (
-      <section className="bg-background px-5 py-16 sm:px-8 lg:px-10">
-        <div className="mx-auto max-w-7xl text-center">
-          <h2 className="font-heading text-3xl font-bold text-foreground sm:text-4xl">
-            Featured Studios
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            We couldn&apos;t load studios right now. Please try again later.
-          </p>
-        </div>
-      </section>
-    );
+  if (!response.ok) {
+    throw new Error("Failed to fetch studios");
   }
+
+  const studios = await response.json();
 
   return (
     <section className="bg-background px-5 py-16 sm:px-8 lg:px-10">
       <div className="mx-auto max-w-7xl">
         <div className="mb-10 text-center">
-          <p className="mb-3 font-medium text-primary">Find your creative space</p>
+          <p className="mb-3 font-medium text-primary">
+            Find your creative space
+          </p>
 
           <h2 className="font-heading text-3xl font-bold text-foreground sm:text-4xl">
             Featured Studios
@@ -71,6 +53,7 @@ export default async function FeaturedStudios() {
   );
 }
 
+
 export function FeaturedStudiosSkeleton() {
   return (
     <section className="bg-background px-5 py-16 sm:px-8 lg:px-10">
@@ -87,7 +70,7 @@ export function FeaturedStudiosSkeleton() {
               key={index}
               className="overflow-hidden rounded-2xl border border-border"
             >
-              <div className="aspect-[4/3] animate-pulse bg-secondary" />
+              <div className="aspect-4/3 animate-pulse bg-secondary" />
               <div className="space-y-4 p-5">
                 <div className="h-6 w-3/4 animate-pulse rounded bg-secondary" />
                 <div className="h-4 w-1/2 animate-pulse rounded bg-secondary" />
