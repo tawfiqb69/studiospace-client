@@ -50,12 +50,27 @@ export default function StudioForm({ mode = "add", studio }) {
     maxCapacity: studio?.maxCapacity ?? "",
     location: studio?.location ?? "",
     image: studio?.image ?? "",
+    gallery: studio?.gallery?.filter((url) => url !== studio?.image) ?? [],
     amenities: studio?.amenities ?? [],
     overview: studio?.overview ?? "",
   });
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
+  const addGalleryImage = () => {
+    setValues((prev) => ({
+      ...prev,
+      gallery: [...prev.gallery, ""],
+    }));
+  };
+
+  const removeGalleryImage = (index) => {
+    setValues((prev) => ({
+      ...prev,
+      gallery: prev.gallery.filter((_, i) => i !== index),
+    }));
   };
 
   const toggleAmenity = (amenity) => {
@@ -68,10 +83,12 @@ export default function StudioForm({ mode = "add", studio }) {
   const validate = () => {
     if (!values.title.trim()) return "Please enter a studio title";
     if (!values.category) return "Please choose a category";
-    if (!(Number(values.hourlyRate) > 0)) return "Hourly rate must be more than 0";
+    if (!(Number(values.hourlyRate) > 0))
+      return "Hourly rate must be more than 0";
     if (values.securityDeposit === "" || Number(values.securityDeposit) < 0)
       return "Please enter a security deposit (0 or more)";
-    if (!(Number(values.maxCapacity) >= 1)) return "Max capacity must be at least 1";
+    if (!(Number(values.maxCapacity) >= 1))
+      return "Max capacity must be at least 1";
     if (!values.location.trim()) return "Please enter the studio address";
     if (!/^https?:\/\//i.test(values.image.trim()))
       return "Image URL must start with http:// or https://";
@@ -97,6 +114,10 @@ export default function StudioForm({ mode = "add", studio }) {
       maxCapacity: Number(values.maxCapacity),
       location: values.location.trim(),
       image: values.image.trim(),
+      gallery: [
+        values.image.trim(),
+        ...values.gallery.map((url) => url.trim()).filter(Boolean),
+      ],
       amenities: values.amenities,
       overview: values.overview.trim(),
     };
@@ -104,7 +125,7 @@ export default function StudioForm({ mode = "add", studio }) {
     setLoading(true);
     const { ok, data } = await privateFetch(
       isEdit ? `/api/studios/${studio._id}` : "/api/studios",
-      { method: isEdit ? "PUT" : "POST", body: JSON.stringify(body) }
+      { method: isEdit ? "PUT" : "POST", body: JSON.stringify(body) },
     );
     setLoading(false);
 
@@ -171,7 +192,9 @@ export default function StudioForm({ mode = "add", studio }) {
 
       {/* Pricing */}
       <section className="space-y-5">
-        <h2 className="font-heading text-lg font-semibold">Price and capacity</h2>
+        <h2 className="font-heading text-lg font-semibold">
+          Price and capacity
+        </h2>
 
         <div className="grid gap-5 sm:grid-cols-3">
           <div className="space-y-2">
@@ -217,20 +240,71 @@ export default function StudioForm({ mode = "add", studio }) {
 
       {/* Photo */}
       <section className="space-y-5">
-        <h2 className="font-heading text-lg font-semibold">Photo</h2>
+        <h2 className="font-heading text-lg font-semibold">Photos</h2>
 
-        <div className="space-y-2">
-          <Label htmlFor="image">Image URL</Label>
-          <Input
-            id="image"
-            name="image"
-            type="url"
-            value={values.image}
-            onChange={handleChange}
-            placeholder="https://i.ibb.co/your-image.jpg"
-          />
+        <div className="space-y-3">
+          <div className="space-y-2">
+            <Label htmlFor="image">Main Image URL</Label>
+
+            <div className="flex items-center gap-2">
+              <Input
+                id="image"
+                name="image"
+                type="url"
+                value={values.image}
+                onChange={handleChange}
+                placeholder="https://i.ibb.co/your-image.jpg"
+              />
+
+              <Button
+                type="button"
+                size="icon"
+                onClick={addGalleryImage}
+                aria-label="Add another image"
+              >
+                +
+              </Button>
+            </div>
+          </div>
+
+          {values.gallery.map((url, index) => (
+            <div key={index} className="space-y-2">
+              <Label htmlFor={`gallery-${index}`}>
+                Additional Image {index + 1}
+              </Label>
+
+              <div className="flex items-center gap-2">
+                <Input
+                  id={`gallery-${index}`}
+                  type="url"
+                  value={url}
+                  onChange={(e) => {
+                    const updatedGallery = [...values.gallery];
+                    updatedGallery[index] = e.target.value;
+
+                    setValues((prev) => ({
+                      ...prev,
+                      gallery: updatedGallery,
+                    }));
+                  }}
+                  placeholder="https://i.ibb.co/your-image.jpg"
+                />
+
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="outline"
+                  onClick={() => removeGalleryImage(index)}
+                  aria-label="Remove image"
+                >
+                  −
+                </Button>
+              </div>
+            </div>
+          ))}
+
           <p className="text-xs text-muted-foreground">
-            Upload your photo to imgbb and paste the direct link here.
+            Upload your photos to imgbb and paste their direct URLs here.
           </p>
         </div>
       </section>
@@ -301,7 +375,11 @@ export default function StudioForm({ mode = "add", studio }) {
         </div>
       </section>
 
-      <Button type="submit" disabled={loading} className="h-11 w-full text-base sm:w-auto sm:px-8">
+      <Button
+        type="submit"
+        disabled={loading}
+        className="h-11 w-full text-base sm:w-auto sm:px-8"
+      >
         {loading
           ? isEdit
             ? "Saving..."

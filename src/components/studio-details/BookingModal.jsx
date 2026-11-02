@@ -25,16 +25,15 @@ export default function BookingModal({
 }) {
   const router = useRouter();
 
-const [today] = useState(
-  new Date().toISOString().split("T")[0]
-);
+  const [today] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
-
-;
 
   const startMinutes = startTime
     ? Number(startTime.split(":")[0]) * 60 +
@@ -46,10 +45,19 @@ const [today] = useState(
       Number(endTime.split(":")[1])
     : 0;
 
-  const totalHours =
+  const totalMinutes =
     startTime && endTime && endMinutes > startMinutes
-      ? (endMinutes - startMinutes) / 60
+      ? endMinutes - startMinutes
       : 0;
+
+  const totalHours = totalMinutes / 60;
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  const durationText = hours
+    ? `${hours}h ${minutes}m`
+    : `${minutes}m`;
 
   const totalPrice = Math.round(
     totalHours * Number(hourlyRate || 0)
@@ -177,9 +185,11 @@ const [today] = useState(
 
           <div className="rounded-lg bg-secondary p-4">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Total hours</span>
+              <span className="text-muted-foreground">
+                Total duration
+              </span>
               <span className="font-medium">
-                {totalHours ? totalHours : 0} hours
+                {durationText}
               </span>
             </div>
 
