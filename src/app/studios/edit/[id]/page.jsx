@@ -138,7 +138,7 @@ if (!studio) {
         </p>
       </div>
 
-      <StudioForm mode="edit" studio={studio} />
+      <StudioForm key={id} mode="edit" studio={studio} />
     </section>
   );
 }

@@ -12,7 +12,7 @@ export default function AddStudioPage() {
       </p>
 
       <div className="mt-8">
-        <StudioForm mode="add" />
+        <StudioForm key="add" mode="add" />
       </div>
     </div>
   );

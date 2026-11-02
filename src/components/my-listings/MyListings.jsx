@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { privateFetch } from "@/lib/api";
 import DeleteStudioModal from "./DeleteStudioModal";
+import Image from "next/image";
 
 export default function MyListings({ studios }) {
   const router = useRouter();
@@ -98,9 +99,12 @@ export default function MyListings({ studios }) {
             key={studio._id}
             className="flex flex-col gap-5 rounded-xl border border-border bg-card p-4 sm:flex-row sm:items-center"
           >
-            <img
+            <Image
               src={studio.image}
               alt={studio.title}
+              width={144}
+              height={112}
+              sizes="(max-width: 640px) 100vw, 144px"
               className="h-48 w-full rounded-lg object-cover sm:h-28 sm:w-36"
             />
 

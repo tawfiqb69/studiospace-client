@@ -25,10 +25,10 @@ export default function RegisterPage() {
       toast.error("Password must be at least 6 characters long");
       return;
     }
-    // if (!/[A-Z]/.test(password)) {
-    //   toast.error("Password must have at least one uppercase letter");
-    //   return;
-    // }
+    if (!/[A-Z]/.test(password)) {
+      toast.error("Password must have at least one uppercase letter");
+      return;
+    }
     if (!/[a-z]/.test(password)) {
       toast.error("Password must have at least one lowercase letter");
       return;

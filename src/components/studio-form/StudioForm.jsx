@@ -8,6 +8,7 @@ import { privateFetch } from "@/lib/api";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { FaTimes } from "react-icons/fa";
 
 const categories = [
   "Photo Studios",
@@ -35,6 +36,19 @@ const amenityOptions = [
 const fieldClass =
   "w-full rounded-lg border border-input bg-background dark:bg-input/30 px-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30";
 
+const getInitialValues = (studio) => ({
+  title: studio?.title ?? "",
+  category: studio?.category ?? "",
+  hourlyRate: studio?.hourlyRate ?? "",
+  securityDeposit: studio?.securityDeposit ?? "",
+  maxCapacity: studio?.maxCapacity ?? "",
+  location: studio?.location ?? "",
+  image: studio?.image ?? "",
+  gallery: studio?.gallery?.filter((url) => url !== studio?.image) ?? [],
+  amenities: studio?.amenities ?? [],
+  overview: studio?.overview ?? "",
+});
+
 export default function StudioForm({ mode = "add", studio }) {
   const router = useRouter();
   const isEdit = mode === "edit";
@@ -42,18 +56,9 @@ export default function StudioForm({ mode = "add", studio }) {
   const user = session?.user;
 
   const [loading, setLoading] = useState(false);
-  const [values, setValues] = useState({
-    title: studio?.title ?? "",
-    category: studio?.category ?? "",
-    hourlyRate: studio?.hourlyRate ?? "",
-    securityDeposit: studio?.securityDeposit ?? "",
-    maxCapacity: studio?.maxCapacity ?? "",
-    location: studio?.location ?? "",
-    image: studio?.image ?? "",
-    gallery: studio?.gallery?.filter((url) => url !== studio?.image) ?? [],
-    amenities: studio?.amenities ?? [],
-    overview: studio?.overview ?? "",
-  });
+  const [values, setValues] = useState(() =>
+    getInitialValues(isEdit ? studio : null),
+  );
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -375,19 +380,32 @@ export default function StudioForm({ mode = "add", studio }) {
         </div>
       </section>
 
-      <Button
-        type="submit"
-        disabled={loading}
-        className="h-11 w-full text-base sm:w-auto sm:px-8"
-      >
-        {loading
-          ? isEdit
-            ? "Saving..."
-            : "Adding studio..."
-          : isEdit
-            ? "Save changes"
-            : "Add studio"}
-      </Button>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button
+          type="submit"
+          disabled={loading}
+          className="h-11 w-full text-base sm:w-auto sm:px-8"
+        >
+          {loading
+            ? isEdit
+              ? "Saving..."
+              : "Adding studio..."
+            : isEdit
+              ? "Save changes"
+              : "Add studio"}
+        </Button>
+
+        {!isEdit && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => router.back()}
+            className="h-11 w-full border-primary/25 bg-primary/5 text-primary transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary sm:w-auto sm:px-8"
+          >
+            Close Form
+          </Button>
+        )}
+      </div>
     </form>
   );
 }
