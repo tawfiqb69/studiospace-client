@@ -3,7 +3,17 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Aperture, Menu, X } from "lucide-react";
+import {
+  Aperture,
+  Menu,
+  X,
+  LayoutDashboard,
+  Plus,
+  Store,
+  CalendarCheck,
+  LogOut,
+  ChevronRight,
+} from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { buttonVariants } from "@/components/ui/button";
@@ -16,6 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ThemeToggle from "@/components/common/ThemeToggle";
+import ProfileDropdown from "../common/ProfileDropdown";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -35,6 +46,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
 
@@ -106,47 +118,11 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-2">
-                    <ThemeToggle />
+          <ThemeToggle />
           {isPending ? (
             <div className="size-9 animate-pulse rounded-full bg-muted" />
           ) : user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                aria-label="Open account menu"
-                className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <Avatar className="size-9">
-                  <AvatarImage src={user.image || undefined} alt={user.name} />
-                  <AvatarFallback>
-                    {user.name?.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-60">
-                <div className="px-2 py-2">
-                  <p className="truncate text-sm font-medium">{user.name}</p>
-                  <p className="truncate text-xs text-muted-foreground">
-                    {user.email}
-                  </p>
-                </div>
-                <DropdownMenuSeparator />
-                {userLinks.map((link) => (
-                  <DropdownMenuItem
-                    key={link.href}
-                    onClick={() => router.push(link.href)}
-                  >
-                    {link.label}
-                  </DropdownMenuItem>
-                ))}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="text-destructive"
-                >
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <ProfileDropdown user={user} onLogout={handleLogout} />
           ) : (
             <div className="hidden items-center gap-2 md:flex">
               <Link

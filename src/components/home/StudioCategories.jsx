@@ -1,90 +1,153 @@
 
 import Link from "next/link";
+import {
+  ArrowUpRight,
+  Camera,
+  Clapperboard,
+  Mic2,
+  Music2,
+  Palette,
+} from "lucide-react";
 
 const categories = [
   {
     name: "Photo Studios",
-    icon: "📸",
+    number: "01",
+    icon: Camera,
     description: "Perfect spaces for photography and creative shoots.",
     cardStyle: "border-gel-photo/30 bg-gel-photo/10",
-    iconStyle: "bg-gel-photo",
+    iconStyle: "bg-gel-photo/15 text-gel-photo",
   },
   {
     name: "Sound Stages",
-    icon: "🎬",
+    number: "02",
+    icon: Clapperboard,
     description: "Professional spaces for film and video production.",
     cardStyle: "border-gel-sound/30 bg-gel-sound/10",
-    iconStyle: "bg-gel-sound",
+    iconStyle: "bg-gel-sound/15 text-gel-sound",
   },
   {
     name: "Podcast Rooms",
-    icon: "🎙️",
+    number: "03",
+    icon: Mic2,
     description: "Create your next podcast in a dedicated space.",
     cardStyle: "border-gel-podcast/30 bg-gel-podcast/10",
-    iconStyle: "bg-gel-podcast",
+    iconStyle: "bg-gel-podcast/15 text-gel-podcast",
   },
   {
     name: "Music Suites",
-    icon: "🎵",
+    number: "04",
+    icon: Music2,
     description: "Spaces for recording, mixing, and making music.",
     cardStyle: "border-gel-music/30 bg-gel-music/10",
-    iconStyle: "bg-gel-music",
+    iconStyle: "bg-gel-music/15 text-gel-music",
   },
   {
     name: "Art Workshops",
-    icon: "🎨",
+    number: "05",
+    icon: Palette,
     description: "Creative spaces to explore your artistic ideas.",
     cardStyle: "border-gel-art/30 bg-gel-art/10",
-    iconStyle: "bg-gel-art",
+    iconStyle: "bg-gel-art/15 text-gel-art",
   },
 ];
 
 export default function StudioCategories() {
   return (
-    <section className="bg-secondary/40 px-5 py-16 sm:px-8 lg:px-10">
+    <section className="bg-secondary/40 px-5 py-20 sm:px-8 lg:px-10 lg:py-24">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-10 text-center">
-          <p className="mb-3 font-medium text-primary">
-            Explore by category
-          </p>
+        {/* Section Heading */}
+        <div className="mb-12 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div className="max-w-2xl">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2">
+              <span className="size-2 rounded-full bg-primary" />
+              <span className="text-xs font-semibold uppercase tracking-widest text-primary">
+                Explore by category
+              </span>
+            </div>
 
-          <h2 className="font-heading text-3xl font-bold text-foreground sm:text-4xl">
-            Find Your Creative Space
-          </h2>
+            <h2 className="font-heading text-3xl font-bold leading-tight text-foreground sm:text-4xl lg:text-5xl">
+              Find the space for
+              <span className="text-primary"> your next big idea.</span>
+            </h2>
 
-          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-            Discover the perfect space for your next creative project.
+            <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground sm:text-base">
+              From photography to music production, discover a creative
+              environment that brings your ideas to life.
+            </p>
+          </div>
+
+          <p className="shrink-0 font-heading text-sm font-semibold text-muted-foreground">
+            <span className="text-3xl font-bold text-primary">05</span>
+            <span className="ml-2">Creative categories</span>
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category) => (
-            <Link
-              key={category.name}
-              href={`/studios?category=${encodeURIComponent(category.name)}`}
-              className={`group rounded-2xl border p-6 transition-all duration-200 hover:-translate-y-1 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary ${category.cardStyle}`}
-            >
-              <div className="mb-5 flex items-center justify-between">
-                <span
-                  className={`flex h-12 w-12 items-center justify-center rounded-xl text-2xl text-[#26272E] ${category.iconStyle}`}
-                >
-                  {category.icon}
+        {/* Category Cards */}
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-6">
+          {categories.map((category, index) => {
+            const Icon = category.icon;
+
+            return (
+              <Link
+                key={category.name}
+                href={`/studios?category=${encodeURIComponent(category.name)}`}
+                className={`group relative overflow-hidden rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:p-7 lg:col-span-2 ${
+                  index === 3
+                    ? "lg:col-start-2"
+                    : index === 4
+                      ? "lg:col-start-4"
+                      : ""
+                } ${category.cardStyle}`}
+              >
+                {/* Decorative Background Number */}
+                <span className="pointer-events-none absolute -right-2 -top-7 font-heading text-8xl font-bold text-foreground/[0.045] transition-all duration-500 group-hover:scale-110 group-hover:text-primary/[0.10]">
+                  {category.number}
                 </span>
 
-                <span className="rounded-full bg-background/80 px-3 py-1 text-xs font-semibold text-foreground">
-                  Explore
-                </span>
-              </div>
+                <div className="relative">
+                  {/* Icon and Category Number */}
+                  <div className="mb-8 flex items-center justify-between">
+                    <div
+                      className={`flex size-14 items-center justify-center rounded-2xl ${category.iconStyle} transition-transform duration-300 group-hover:scale-110`}
+                    >
+                      <Icon size={26} strokeWidth={1.8} />
+                    </div>
 
-              <h3 className="font-heading text-xl font-semibold text-foreground">
-                {category.name}
-              </h3>
+                    <span className="text-xs font-bold tracking-widest text-muted-foreground/70">
+                      CATEGORY / {category.number}
+                    </span>
+                  </div>
 
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {category.description}
-              </p>
-            </Link>
-          ))}
+                  {/* Card Content */}
+                  <h3 className="font-heading text-xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary sm:text-2xl">
+                    {category.name}
+                  </h3>
+
+                  <p className="mt-3 max-w-xs text-sm leading-7 text-muted-foreground">
+                    {category.description}
+                  </p>
+
+                  {/* Explore Action */}
+                  <div className="mt-7 flex items-center justify-between border-t border-foreground/10 pt-5">
+                    <span className="text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
+                      Explore spaces
+                    </span>
+
+                    <span className="flex size-10 items-center justify-center rounded-full border border-border bg-background/70 text-foreground transition-all duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground">
+                      <ArrowUpRight
+                        size={18}
+                        className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                      />
+                    </span>
+                  </div>
+                </div>
+
+                {/* Bottom Accent */}
+                <div className="absolute bottom-0 left-0 h-1 w-0 bg-primary transition-all duration-500 group-hover:w-full" />
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>

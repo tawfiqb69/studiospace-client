@@ -70,13 +70,18 @@ export default function RegisterPage() {
           Join StudioSpace to book or host creative studios.
         </p>
 
-        <form onSubmit={handleRegister} className="mt-6 space-y-4">
+        <form
+          onSubmit={handleRegister}
+          className="mt-6 space-y-4"
+          autoComplete="off"
+        >
           <div className="space-y-2">
             <Label htmlFor="name">Name</Label>
             <Input
               id="name"
               type="text"
               placeholder="Your full name"
+              autoComplete="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -89,6 +94,7 @@ export default function RegisterPage() {
               id="email"
               type="email"
               placeholder="you@example.com"
+              autoComplete="off"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -101,6 +107,7 @@ export default function RegisterPage() {
               id="photo"
               type="url"
               placeholder="https://example.com/your-photo.jpg"
+              autoComplete="off"
               value={photoURL}
               onChange={(e) => setPhotoURL(e.target.value)}
             />
@@ -112,6 +119,7 @@ export default function RegisterPage() {
               id="password"
               type="password"
               placeholder="Min 6 characters, upper and lower case"
+              autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
