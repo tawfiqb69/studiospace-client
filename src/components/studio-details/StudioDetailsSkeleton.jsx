@@ -5,7 +5,7 @@ export default function StudioDetailsSkeleton() {
 
       <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div>
-          <div className="aspect-[16/10] rounded-2xl bg-secondary" />
+          <div className="aspect-16/10 rounded-2xl bg-secondary" />
           <div className="mt-6 h-6 w-28 rounded-full bg-secondary" />
           <div className="mt-4 h-9 w-3/4 rounded bg-secondary" />
           <div className="mt-3 h-5 w-1/3 rounded bg-secondary" />

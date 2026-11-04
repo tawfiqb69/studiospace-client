@@ -284,7 +284,7 @@ export default function MyBookings({ bookings = [], error = "" }) {
                 {group.items.map((booking) => (
                   <li key={booking._id} className="relative pl-6 sm:pl-8">
                     <span
-                      className={`absolute -left-[9px] top-5 size-4 rounded-full ring-4 ring-background ${
+                      className={`absolute -left-2.25 top-5 size-4 rounded-full ring-4 ring-background ${
                         dotStyles[booking.status] || dotStyles.Completed
                       }`}
                       aria-hidden="true"
