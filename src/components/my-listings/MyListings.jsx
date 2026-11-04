@@ -196,7 +196,7 @@ export default function MyListings({ studios }) {
                     className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium transition hover:bg-muted"
                   >
                     <Pencil className="size-4" aria-hidden="true" />
-                    Update
+                    Edit 
                   </Link>
 
                   <button
