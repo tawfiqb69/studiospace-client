@@ -18,7 +18,7 @@ export default function StudioGallery({ images, title }) {
     >
       {images.map((src, index) => (
         <SwiperSlide key={`${src}-${index}`}>
-          <div className="relative aspect-[16/10]">
+          <div className="relative aspect-16/10">
             <Image
               src={src}
               alt={`${title} photo ${index + 1}`}

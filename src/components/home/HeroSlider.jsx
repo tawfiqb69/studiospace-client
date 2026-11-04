@@ -2,18 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import {
-  ArrowLeft,
-  ArrowRight,
-  ArrowUpRight,
-  Sparkles,
-} from "lucide-react";
-import {
-  Autoplay,
-  Navigation,
-  Pagination,
-  A11y,
-} from "swiper/modules";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Sparkles } from "lucide-react";
+import { Autoplay, Navigation, Pagination, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
@@ -58,12 +48,9 @@ export default function HeroSlider() {
             disableOnInteraction: false,
           }}
           loop
-          navigation={{
-            prevEl: ".hero-prev",
-            nextEl: ".hero-next",
-          }}
+          navigation
           pagination={{ clickable: true }}
-          className="hero-swiper h-120 sm:h-130 lg:h-140"
+          className="hero-swiper h-120 sm:h-130 lg:h-140 overflow-hidden rounded-2xl"
         >
           {slides.map((slide) => (
             <SwiperSlide key={slide.number}>
@@ -118,7 +105,6 @@ export default function HeroSlider() {
                   </div>
                 </div>
 
-                {/* Slide Number */}
                 <div className="absolute bottom-7 right-7 z-20 hidden items-center gap-2 text-white sm:flex">
                   <span className="font-heading text-2xl font-bold">
                     {slide.number}
@@ -131,23 +117,7 @@ export default function HeroSlider() {
           ))}
         </Swiper>
 
-        {/* Previous Control */}
-        <button
-          type="button"
-          aria-label="Previous slide"
-          className="hero-prev absolute left-3 top-1/2 z-30 flex size-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white/75 opacity-70 backdrop-blur-md transition-all duration-300 hover:border-white/40 hover:bg-white/15 hover:text-white hover:opacity-100 sm:left-5 sm:size-10 lg:left-7"
-        >
-          <ArrowLeft className="size-4" />
-        </button>
 
-        {/* Next Control */}
-        <button
-          type="button"
-          aria-label="Next slide"
-          className="hero-next absolute right-3 top-1/2 z-30 flex size-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/20 text-white/75 opacity-70 backdrop-blur-md transition-all duration-300 hover:border-white/40 hover:bg-white/15 hover:text-white hover:opacity-100 sm:right-5 sm:size-10 lg:right-7"
-        >
-          <ArrowRight className="size-4" />
-        </button>
 
         {/* Floating Info */}
         <div className="pointer-events-none absolute bottom-7 left-7 z-20 hidden items-center gap-3 rounded-2xl border border-white/15 bg-black/30 px-4 py-3 text-white backdrop-blur-lg lg:flex">

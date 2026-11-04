@@ -10,19 +10,46 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import CancelBookingModal from "@/components/my-bookings/CancelBookingModal";
 
 const months = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
-const weekdays = [
-  "Sunday", "Monday", "Tuesday", "Wednesday",
-  "Thursday", "Friday", "Saturday",
+const fullMonths = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
+const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 // "2026-11-20" theke mash, din ar weekday ber kori (current time use kori na)
 function getDateParts(dateString = "") {
   const [year, month, day] = dateString.split("-").map(Number);
   const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
-  return { month: months[month - 1], day, weekday: weekdays[weekday] };
+  return {
+    year,
+    month: months[month - 1],
+    fullMonth: fullMonths[month - 1],
+    day,
+    weekday: weekdays[weekday],
+  };
 }
 
 function toMinutes(time = "00:00") {
@@ -39,18 +66,46 @@ function formatTime(time = "00:00") {
 }
 
 function getDuration(start, end) {
-  const hours = (toMinutes(end) - toMinutes(start)) / 60;
-  const text = Number.isInteger(hours) ? hours : hours.toFixed(1);
-  return `${text} ${hours === 1 ? "hour" : "hours"}`;
+  const totalMinutes = toMinutes(end) - toMinutes(start);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours && minutes) return `${hours}h ${minutes}m`;
+  if (hours) return `${hours}h`;
+  return `${minutes}m`;
 }
 
-// 4-ta status 4-ta alada rong-e. Text-o ache, tai shudhu rong-er upor depend kore na.
+// Booking gulo mash onujayi alada group kori (list already newest first)
+function groupByMonth(bookings) {
+  const groups = [];
+
+  bookings.forEach((booking) => {
+    const key = (booking.date || "").slice(0, 7);
+    const last = groups[groups.length - 1];
+
+    if (last && last.key === key) {
+      last.items.push(booking);
+    } else {
+      const { fullMonth, year } = getDateParts(booking.date);
+      groups.push({ key, label: `${fullMonth} ${year}`, items: [booking] });
+    }
+  });
+
+  return groups;
+}
+
 const statusStyles = {
   Pending: "border-gel/60 bg-gel/20 text-foreground",
-  Confirmed:
-    "border-emerald-600/40 bg-emerald-100 text-emerald-900 dark:border-emerald-400/40 dark:bg-emerald-950 dark:text-emerald-300",
-  Completed: "border-border bg-secondary text-secondary-foreground",
-  Cancelled: "border-destructive/40 bg-destructive/10 text-destructive",
+  Confirmed: "border-primary/40 bg-primary/10 text-primary",
+  Completed: "border-foreground/20 bg-foreground/10 text-foreground",
+  Cancelled: "border-border bg-muted text-muted-foreground",
+};
+
+const dotStyles = {
+  Pending: "bg-gel",
+  Confirmed: "bg-primary",
+  Completed: "bg-foreground",
+  Cancelled: "bg-muted-foreground/50",
 };
 
 function StatusBadge({ status }) {
@@ -66,61 +121,76 @@ function StatusBadge({ status }) {
   );
 }
 
-function BookingTicket({ booking, onCancel }) {
+function BookingCard({ booking, onCancel }) {
   const { month, day, weekday } = getDateParts(booking.date);
   const isCancelled = booking.status === "Cancelled";
+  const code = String(booking._id).slice(-6).toUpperCase();
 
   return (
     <article
-      className={`flex flex-col overflow-hidden rounded-2xl border border-border bg-card sm:flex-row ${
-        isCancelled ? "opacity-75" : ""
+      className={`overflow-hidden rounded-2xl border border-border bg-card ${
+        isCancelled ? "opacity-70" : ""
       }`}
     >
-      {/* Date stub */}
-      <div className="relative flex items-center gap-3 border-b-2 border-dashed border-border bg-secondary px-5 py-4 sm:w-36 sm:shrink-0 sm:flex-col sm:justify-center sm:gap-0 sm:border-b-0 sm:border-r-2 sm:py-6">
-        <span className="text-sm font-medium text-muted-foreground">
-          {month}
+      {/* Call sheet header bar */}
+      <div className="flex items-center justify-between gap-3 border-b border-border bg-muted px-4 py-2.5 text-xs font-medium uppercase tracking-widest text-muted-foreground sm:px-5">
+        <span className="text-foreground">
+          {weekday} · {day} {month}
         </span>
-        <span className="font-heading text-3xl font-bold leading-none sm:mt-1 sm:text-4xl">
-          {day}
-        </span>
-        <span className="text-sm text-muted-foreground sm:mt-2">{weekday}</span>
-
-        {/* Ticket-er duto notch */}
-        <span className="absolute right-0 top-0 hidden size-5 -translate-y-1/2 translate-x-1/2 rounded-full border border-border bg-background sm:block" />
-        <span className="absolute bottom-0 right-0 hidden size-5 translate-x-1/2 translate-y-1/2 rounded-full border border-border bg-background sm:block" />
+        <span className="font-mono">#{code}</span>
       </div>
 
-      {/* Details */}
-      <div className="flex flex-1 flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
-        <div className="min-w-0">
-          <h2 className="font-heading text-lg font-semibold sm:text-xl">
+      <div className="p-4 sm:p-5">
+        <div className="flex items-start justify-between gap-3">
+          <h3
+            className={`min-w-0 font-heading text-lg font-semibold leading-snug sm:text-xl ${
+              isCancelled ? "line-through decoration-muted-foreground/50" : ""
+            }`}
+          >
             <Link
               href={`/studios/${booking.studioId}`}
               className="transition-colors hover:text-primary"
             >
               {booking.studioTitle}
             </Link>
-          </h2>
-
-          <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
-            <Clock className="size-4" aria-hidden="true" />
-            <span className="font-medium text-foreground">
-              {formatTime(booking.startTime)} to {formatTime(booking.endTime)}
-            </span>
-            <span>({getDuration(booking.startTime, booking.endTime)})</span>
-          </p>
+          </h3>
+          <StatusBadge status={booking.status} />
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 sm:flex-col sm:items-end sm:gap-2">
-          <StatusBadge status={booking.status} />
-          <p className="font-heading text-xl font-bold">
-            ৳{Number(booking.totalPrice).toLocaleString("en-BD")}
-          </p>
+        {/* Call time */}
+        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
+          <Clock className="size-5 text-primary" aria-hidden="true" />
+          <span className="font-heading text-2xl font-bold tracking-tight sm:text-3xl">
+            {formatTime(booking.startTime)}
+          </span>
+          <span className="text-muted-foreground">to</span>
+          <span className="font-heading text-2xl font-bold tracking-tight sm:text-3xl">
+            {formatTime(booking.endTime)}
+          </span>
+          <span className="rounded-md bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground">
+            {getDuration(booking.startTime, booking.endTime)}
+          </span>
+        </div>
+
+        {/* Price + action */}
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-dashed border-border pt-4">
+          <div>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">
+              Total
+            </p>
+            <p className="font-heading text-xl font-bold text-primary">
+              ৳{Number(booking.totalPrice).toLocaleString("en-BD")}
+            </p>
+          </div>
 
           {/* Shudhu Pending booking cancel kora jay */}
           {booking.status === "Pending" && (
-            <Button variant="outline" size="sm" onClick={() => onCancel(booking)}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full sm:w-auto"
+              onClick={() => onCancel(booking)}
+            >
               Cancel booking
             </Button>
           )}
@@ -143,7 +213,7 @@ export default function MyBookings({ bookings = [], error = "" }) {
     const { ok, data } = await privateFetch(
       `/api/bookings/${bookingId}`,
       { method: "PATCH" },
-      router
+      router,
     );
     setCancelling(false);
 
@@ -151,7 +221,7 @@ export default function MyBookings({ bookings = [], error = "" }) {
       toast.success("Booking cancelled");
     } else {
       toast.error(
-        data?.message || "Could not cancel the booking. Please try again."
+        data?.message || "Could not cancel the booking. Please try again.",
       );
     }
 
@@ -168,29 +238,26 @@ export default function MyBookings({ bookings = [], error = "" }) {
     );
   }
 
-  return (
-    <div className="mx-auto min-h-[70vh] max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-            My Bookings
-          </h1>
-          <p className="mt-2 text-muted-foreground">
-            {bookings.length === 0
-              ? "Your booked sessions will show up here."
-              : `${bookings.length} ${
-                  bookings.length === 1 ? "booking" : "bookings"
-                }, newest first.`}
-          </p>
-        </div>
+  const groups = groupByMonth(bookings);
 
-        {/* <Link href="/studios" className={buttonVariants({ variant: "outline" })}>
-          Book another studio
-        </Link> */}
-      </div>
+  return (
+    <div className="mx-auto min-h-[70vh] max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
+      <p className="text-sm font-semibold uppercase tracking-widest text-primary">
+        Call sheet
+      </p>
+      <h1 className="mt-2 font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+        My Bookings
+      </h1>
+      <p className="mt-2 text-muted-foreground">
+        {bookings.length === 0
+          ? "Your booked sessions will show up here."
+          : `${bookings.length} ${
+              bookings.length === 1 ? "session" : "sessions"
+            } on your schedule, newest first.`}
+      </p>
 
       {bookings.length === 0 ? (
-        <div className="rounded-2xl border-2 border-dashed border-border px-4 py-16 text-center">
+        <div className="mt-8 rounded-2xl border-2 border-dashed border-border px-4 py-16 text-center">
           <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-secondary text-primary">
             <CalendarDays className="size-6" aria-hidden="true" />
           </span>
@@ -205,13 +272,31 @@ export default function MyBookings({ bookings = [], error = "" }) {
           </Link>
         </div>
       ) : (
-        <div className="max-w-4xl space-y-4">
-          {bookings.map((booking) => (
-            <BookingTicket
-              key={booking._id}
-              booking={booking}
-              onCancel={setBookingToCancel}
-            />
+        <div className="mt-10 space-y-10">
+          {groups.map((group) => (
+            <section key={group.key}>
+              <h2 className="font-heading text-sm font-semibold uppercase tracking-widest text-primary">
+                {group.label}
+              </h2>
+
+              {/* Timeline */}
+              <ol className="mt-4 ml-2 space-y-6 border-l-2 border-primary/20">
+                {group.items.map((booking) => (
+                  <li key={booking._id} className="relative pl-6 sm:pl-8">
+                    <span
+                      className={`absolute -left-[9px] top-5 size-4 rounded-full ring-4 ring-background ${
+                        dotStyles[booking.status] || dotStyles.Completed
+                      }`}
+                      aria-hidden="true"
+                    />
+                    <BookingCard
+                      booking={booking}
+                      onCancel={setBookingToCancel}
+                    />
+                  </li>
+                ))}
+              </ol>
+            </section>
           ))}
         </div>
       )}

@@ -1,13 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { toast } from "sonner";
-import { FaStar, FaMapMarkerAlt, FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Camera, Eye, MapPin, Pencil, Plus, Star, Trash2 } from "lucide-react";
 import { privateFetch } from "@/lib/api";
 import DeleteStudioModal from "./DeleteStudioModal";
-import Image from "next/image";
+
+// Protita category-r nijer rong (brand category colors)
+const categoryColors = {
+  "Photo Studios": "#D97868",
+  "Sound Stages": "#8270BD",
+  "Podcast Rooms": "#4D9D8B",
+  "Music Suites": "#D0A03D",
+  "Art Workshops": "#A77BB2",
+};
+
+function getCategoryColor(category) {
+  return categoryColors[category] || "#C0245E";
+}
 
 export default function MyListings({ studios }) {
   const router = useRouter();
@@ -43,9 +56,9 @@ export default function MyListings({ studios }) {
   if (studios.length === 0) {
     return (
       <section className="mx-auto flex min-h-[60vh] max-w-7xl flex-col items-center justify-center px-4 text-center">
-        <div className="mb-5 flex size-20 items-center justify-center rounded-full bg-muted text-4xl">
-          📸
-        </div>
+        <span className="mb-5 flex size-20 items-center justify-center rounded-full bg-muted text-primary">
+          <Camera className="size-9" aria-hidden="true" />
+        </span>
 
         <h1 className="font-heading text-2xl font-bold">
           You haven&apos;t listed a studio yet
@@ -58,8 +71,9 @@ export default function MyListings({ studios }) {
 
         <Link
           href="/add-studio"
-          className="mt-6 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:opacity-90"
+          className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:opacity-90"
         >
+          <Plus className="size-4" aria-hidden="true" />
           Add your first studio
         </Link>
       </section>
@@ -67,103 +81,137 @@ export default function MyListings({ studios }) {
   }
 
   return (
-    <section className="mx-auto min-h-[60vh] max-w-7xl px-4 py-12">
-      <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+    <section className="mx-auto min-h-[60vh] max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      {/* Header */}
+      <div className="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
-          <p className="text-sm font-medium text-primary">Studio management</p>
+          <p className="text-sm font-semibold uppercase tracking-widest text-primary">
+            Studio management
+          </p>
 
-          <h1 className="mt-2 font-heading text-3xl font-bold">
+          <h1 className="mt-2 font-heading text-3xl font-bold tracking-tight sm:text-4xl">
             My Studio Listings
           </h1>
 
           <p className="mt-2 text-muted-foreground">
-            Manage and keep track of your creative spaces.
+            <span className="font-semibold text-foreground">
+              {studios.length}
+            </span>{" "}
+            {studios.length === 1 ? "space" : "spaces"} live on StudioSpace.
           </p>
         </div>
 
         <Link
           href="/add-studio"
-          className="w-fit rounded-lg bg-primary px-5 py-3 font-semibold text-primary-foreground transition hover:opacity-90"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 font-semibold text-primary-foreground transition hover:opacity-90 sm:w-fit"
         >
-          + Add New Studio
+          <Plus className="size-4" aria-hidden="true" />
+          Add New Studio
         </Link>
       </div>
 
-      <div className="mb-5 text-sm text-muted-foreground">
-        {studios.length} {studios.length === 1 ? "studio" : "studios"} listed
-      </div>
+      {/* Listings */}
+      <div className="space-y-5">
+        {studios.map((studio) => {
+          const color = getCategoryColor(studio.category);
 
-      <div className="space-y-4">
-        {studios.map((studio) => (
-          <div
-            key={studio._id}
-            className="flex flex-col gap-5 rounded-xl border border-border bg-card p-4 sm:flex-row sm:items-center"
-          >
-            <Image
-              src={studio.image}
-              alt={studio.title}
-              width={144}
-              height={112}
-              sizes="(max-width: 640px) 100vw, 144px"
-              className="h-48 w-full rounded-lg object-cover sm:h-28 sm:w-36"
-            />
+          return (
+            <article
+              key={studio._id}
+              className="group grid overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-0.5 hover:shadow-lg sm:grid-cols-[240px_1fr] lg:grid-cols-[280px_1fr]"
+            >
+              {/* Image: sob card-e same size */}
+              <div className="relative h-52 w-full overflow-hidden sm:h-full sm:min-h-48">
+                <Image
+                  src={studio.image}
+                  alt={studio.title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, 280px"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
 
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className="font-heading text-lg font-bold">
-                  {studio.title}
-                </h2>
-
-                <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium">
-                  {studio.category}
-                </span>
-              </div>
-
-              <p className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-                <FaMapMarkerAlt />
-                {studio.location}
-              </p>
-
-              <div className="mt-3 flex flex-wrap items-center gap-4 text-sm">
-                <span className="font-semibold text-primary">
-                  ${studio.hourlyRate}/hr
-                </span>
-
-                <span className="flex items-center gap-1 text-muted-foreground">
-                  <FaStar className="text-gel" />
+                {/* Rating chip */}
+                <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-background/90 px-2.5 py-1 text-xs font-semibold backdrop-blur">
+                  <Star className="size-3.5 fill-gel text-gel" aria-hidden="true" />
                   {Number(studio.rating || 0).toFixed(1)}
                 </span>
+
+                {/* Category rong-er line */}
+                <span
+                  className="absolute inset-x-0 bottom-0 h-1"
+                  style={{ backgroundColor: color }}
+                  aria-hidden="true"
+                />
               </div>
-            </div>
 
-            <div className="flex flex-wrap gap-2 sm:justify-end">
-              <Link
-                href={`/studios/${studio._id}`}
-                className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium transition hover:bg-muted"
-              >
-                <FaEye />
-                View
-              </Link>
+              {/* Details */}
+              <div className="flex min-w-0 flex-col justify-between gap-5 p-5 sm:p-6">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0">
+                    <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      <span
+                        className="size-2 rounded-full"
+                        style={{ backgroundColor: color }}
+                        aria-hidden="true"
+                      />
+                      {studio.category}
+                    </span>
 
-              <Link
-                href={`/studios/edit/${studio._id}`}
-                className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium transition hover:bg-muted"
-              >
-                <FaEdit />
-                Update
-              </Link>
+                    <h2 className="mt-1.5 font-heading text-xl font-bold leading-snug sm:text-2xl">
+                      {studio.title}
+                    </h2>
 
-              <button
-                type="button"
-                onClick={() => setSelectedStudio(studio)}
-                className="flex items-center gap-2 rounded-lg border border-destructive/30 px-3 py-2 text-sm font-medium text-destructive transition hover:bg-destructive/10"
-              >
-                <FaTrash />
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
+                    <p className="mt-2 flex items-start gap-1.5 text-sm text-muted-foreground">
+                      <MapPin
+                        className="mt-0.5 size-4 shrink-0"
+                        aria-hidden="true"
+                      />
+                      <span className="min-w-0">{studio.location}</span>
+                    </p>
+                  </div>
+
+                  {/* Price */}
+                  <div className="shrink-0 sm:text-right">
+                    <p className="font-heading text-2xl font-bold text-primary sm:text-3xl">
+                      ৳{Number(studio.hourlyRate).toLocaleString("en-BD")}
+                    </p>
+                    <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                      per hour
+                    </p>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="grid grid-cols-3 gap-2 border-t border-dashed border-border pt-4 sm:flex sm:justify-end">
+                  <Link
+                    href={`/studios/${studio._id}`}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium transition hover:bg-muted"
+                  >
+                    <Eye className="size-4" aria-hidden="true" />
+                    View
+                  </Link>
+
+                  <Link
+                    href={`/studios/edit/${studio._id}`}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium transition hover:bg-muted"
+                  >
+                    <Pencil className="size-4" aria-hidden="true" />
+                    Update
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={() => setSelectedStudio(studio)}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-destructive/30 px-3 py-2 text-sm font-medium text-destructive transition hover:bg-destructive/10"
+                  >
+                    <Trash2 className="size-4" aria-hidden="true" />
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </article>
+          );
+        })}
       </div>
 
       <DeleteStudioModal

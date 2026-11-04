@@ -36,7 +36,7 @@ export default function ProfileDropdown({ user, onLogout }) {
         aria-label="Open account menu"
         className="rounded-full outline-none"
       >
-        <Avatar className="size-9 ring-2 ring-primary/20 ring-offset-2 ring-offset-background transition-all">
+        <Avatar className="size-9 ring-2 ring-primary/20 ring-offset-2 ring-offset-background transition-all dark:ring-primary">
           <AvatarImage src={user.image || undefined} alt={user.name} />
           <AvatarFallback>
             {user.name?.charAt(0).toUpperCase()}
