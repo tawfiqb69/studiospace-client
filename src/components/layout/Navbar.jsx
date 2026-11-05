@@ -6,25 +6,13 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   Aperture,
   Menu,
-  X,
-  LayoutDashboard,
-  Plus,
-  Store,
-  CalendarCheck,
-  LogOut,
-  ChevronRight,
+  X
 } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { buttonVariants } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
+
 import ThemeToggle from "@/components/common/ThemeToggle";
 import ProfileDropdown from "../common/ProfileDropdown";
 
